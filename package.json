@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "cheerio": "^1.2.0",
-    "fastify": "^5.7.4"
+    "fastify": "^5.7.4",
+    "googleapis": "^171.2.0"
   }
 }

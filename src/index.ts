@@ -1,12 +1,39 @@
 import Fastify from "fastify";
 import { AurionClient } from "./aurion";
+import { PlanningParser } from "./utils/PlanningParser";
+
+import { GoogleCalendarService } from "./services/GoogleCalendarService";
 
 const server = Fastify({
   logger: true,
 });
 
+const googleService = new GoogleCalendarService();
+
 server.get("/", async (request, reply) => {
   return { status: "OK", message: "We gon be Alright" };
+});
+
+server.get("/api/auth/google", async (request, reply) => {
+  const { code } = request.query as { code: string };
+  if (!code) {
+    return reply
+      .status(400)
+      .send({ error: "Missing 'code' in query parameters" });
+  }
+
+  await googleService.saveToken(code);
+  return { status: "Authenticated", message: "Token saved successfully!" };
+});
+
+server.get("/api/check-auth", async (request, reply) => {
+  const isAuthenticated = await googleService.loadToken();
+  if (isAuthenticated) {
+    return { status: "Authenticated", message: "User is logged in to Google" };
+  } else {
+    const authUrl = googleService.generateAuthUrl();
+    return { status: "Not Authenticated", authUrl };
+  }
 });
 
 server.get("/planning", async (request, reply) => {
