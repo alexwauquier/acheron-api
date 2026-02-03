@@ -131,7 +131,8 @@ export class PlanningParser {
             detectedType === "PARTIEL" ||
             detectedType === "INTERRO" ||
             detectedType === "DS" ||
-            detectedType.includes("AUTO")
+            detectedType.includes("AUTO") ||
+            detectedType.includes("EXAM")
           ) {
             if (firstLine && this.looksLikeRoom(firstLine)) {
               event.room = firstLine;
