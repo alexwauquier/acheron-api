@@ -169,4 +169,18 @@ export class AurionClient {
 
     return await response.text();
   }
+
+  async getPlanningXml(username: string, password: string): Promise<string> {
+    const success = await this.login(username, password);
+    if (!success) {
+      throw new Error("Aurion Login failed");
+    }
+
+    const tokens = await this.navigateToPlanning();
+    if (!tokens) {
+      throw new Error("Failed to navigate to Planning page");
+    }
+
+    return await this.fetchPlanningEvents(tokens.viewState, tokens.idInit);
+  }
 }
